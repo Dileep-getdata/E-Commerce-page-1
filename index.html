@@ -15,7 +15,7 @@
                 <li><a href="./Home.html">HOME</a></li>
                 <li><a href="./index.html">STORE</a></li>
                 <li><a href="./About.html">ABOUT </a></li>
-                <li style="float: right;" class="popCartBtn"><a href="">🛒Cart</a></li>
+                <li style="float: right;" class="popCartBtn"><a href=""><span class="cart-no">0</span>🛒Cart</a></li>
             </ul>
             <hr>
             
@@ -24,7 +24,7 @@
         <section class="product-section">
             <h2>MUSIC</h2>
             <div class="wrap-products" >
-                <div class="each-product">
+                <div id="album1" class="each-product">
                     <h3>ALBUM 1</h3>
                     <div class="image"><img src="https://prasadyash2411.github.io/ecom-website/img/Album%203.png" alt="Album 1"></div>
                     <div>
@@ -35,7 +35,7 @@
                         <button  id="product-1" class="addCrt-btn">Add to cart</button>
                     </div>
                 </div>
-                <div class="each-product">
+                <div id="album2" class="each-product">
                     <h3>ALBUM 2</h3>
                     <div class="image"><img src="https://prasadyash2411.github.io/ecom-website/img/Album%203.png" alt="Album 2"></div>
                     <div>
@@ -46,7 +46,7 @@
                         <button id="product-2" class="addCrt-btn">Add to cart</button>
                     </div>
                 </div>
-                <div class="each-product">
+                <div id="album3" class="each-product">
                     <h3>ALBUM 3</h3>
                     <div class="image"><img src="https://prasadyash2411.github.io/ecom-website/img/Album%203.png" alt="Album 3"></div>
                     <div>
@@ -57,7 +57,7 @@
                         <button id="product-3" class="addCrt-btn">Add to cart</button>
                     </div>
                 </div>
-                <div class="each-product">
+                <div id="album4" class="each-product">
                     <h3>ALBUM 4</h3>
                     <div class="image"><img src="https://prasadyash2411.github.io/ecom-website/img/Album%203.png" alt="Album 4"></div>
                     <div>
@@ -74,7 +74,7 @@
         
         <section class="product-section">
             <h2>MERCH</h2>
-            <div class="wrap-products" >
+            <div id="tshirt1" class="wrap-products" >
                 <div class="each-product">
                     <h3>T-shirt 1</h3>
                     <div class="image"><img src="https://prasadyash2411.github.io/ecom-website/img/Shirt.png" alt="Printed shirt"></div>
@@ -86,7 +86,7 @@
                         <button id="product-5" class="addCrt-btn">Add to cart</button>
                     </div>
                 </div>
-                <div class="each-product">
+                <div  id="tshirt2" class="each-product">
                     <h3>T-shirt 2</h3>
                     <div class="image"><img src="https://prasadyash2411.github.io/ecom-website/img/Shirt.png" alt="Printed shirt"></div>
                     <div class="product-bottom">
@@ -105,18 +105,19 @@
         <section class="popUp-cart" style="float: right;">
             <h2>CART</h2>
             <button class="close">X</button>
-            <div class="table-head">
-                <span>ITEM</span>
-                <span>PRICE</span>
-                <span>QUANTITY</span>
+            <div class="table-head cart-row">
+                <span class=" cart-item cart-colomn">ITEM</span>
+                <span class=" cart-price cart-colomn">PRICE</span>
+                <span class=" cart-qunatity cart-colomn">QUANTITY</span>
             </div>
-            <table class="cart-table">
-                <tr>
-                    <td>hhh</td>
-                    <td>hhh</td>
-                    <td>hhh</td>
-                </tr>
-            </table>
+            <div class="cart-items">
+                
+            </div>
+            <div class="cart-total">
+                <span class="total-title"><strong>Total- $</strong></span>
+                
+                <span id="total-value">0.00</span>
+            </div>
             <button class="payment-btn">PAYMENT</button>
         </section>
         <button class="check-cart-btn popCartBtn">

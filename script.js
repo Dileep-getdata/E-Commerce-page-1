@@ -8,7 +8,7 @@ const closePop=document.querySelector('.close');
 popCart.forEach(function(cartBtn){
     cartBtn.addEventListener('click',(e)=>{
         e.preventDefault();
-        popUpCart.style.display='flex';
+        popUpCart.style.display='block';
     });
 });
 
@@ -21,26 +21,60 @@ closePop.addEventListener('click',(e)=>{
 // 
 // Add to cart button
 // 
-const addCartBtn=document.querySelectorAll('.addCrt-btn');
-let count=0;
-addCartBtn.forEach(function(btn){
-    // console.log(btn);
-    btn.addEventListener('click',()=>{
-        count++;
-        const productDetail=btn.parentElement.parentElement;
+const carter=document.querySelector('.cart-items');
+// console.log(carter);
+const mainDiv=document.getElementById('main-Container');
+mainDiv.addEventListener('click',(e)=>{
+   if(e.target.className=='addCrt-btn'){
+    // console.log(e.target.parentElement.parentElement);   
+    const cartNo=document.querySelector('.cart-no');
+    let totalAmmount=document.getElementById('total-value');
+    // console.log(totalAmmount);
+
+    
+        const productDetail=e.target.parentNode.parentNode;
+        const prodId=productDetail.id;
         const productNme=productDetail.querySelector('h3').innerHTML;
         const productValue=productDetail.querySelector('.ammount').innerHTML;
-        if(count>1){
-            alert(productNme+'Already added')
-        }else{        
+        const prodImage=productDetail.querySelector('.image img').src;
+        if(document.querySelector(`#in-cart-${prodId}`)){
+            alert(`${productNme} is already added`);
+            return;
+        }
+            
+        const send2Cart=document.createElement('div');
+        send2Cart.classList.add('cart-row');
+        send2Cart.setAttribute('id',`in-cart-${prodId}`);
+        const productDetails=` <span class=" cart-item cart-colomn"><img src="${prodImage}"> ${productNme}</span>
+        <span class=" cart-price cart-colomn">${productValue}</span>
+        <span class=" cart-qunatity cart-colomn"><input type="text" value="1"> <button class="cartItm-removeBtn">Remove</button></span>`;
+        send2Cart.innerHTML=productDetails;
+        carter.appendChild(send2Cart);
+
+        totalAmmount.innerText=(parseFloat(totalAmmount.innerText)+parseFloat(productValue));   
+        console.log(totalAmmount);
+
+        cartNo.innerHTML=parseInt(cartNo.innerHTML)+1;
 
         const notify=document.createElement('div');
         notify.classList.add('toast');        
         notify.innerHTML=` ${productNme} is successfully added to cart`;
         container.appendChild(notify);
         setTimeout(()=>{notify.remove()},2000)
-            console.log(productNme,productValue);
-        }
-    });
-        
-    });
+
+   }
+   if(e.target.className=='cartItm-removeBtn'){
+    const cartNo=document.querySelector('.cart-no');
+    let totalAmmount=document.getElementById('total-value');
+
+        cartNo.innerHTML=parseInt(cartNo.innerHTML)-1;
+        cartItem=e.target.parentNode.parentNode;
+        cartPrice=cartItem.querySelector('.cart-price').innerText;
+        totalAmmount.innerText=parseFloat( totalAmmount.innerText) - parseFloat(cartPrice);
+        cartItemId=cartItem.id;
+        cartItem.remove();
+   }
+})
+
+
+
