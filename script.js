@@ -1,4 +1,43 @@
 // 
+// Domloaded
+
+// const  axios = require("axios");
+
+// 
+
+window.addEventListener('DOMContentLoaded',()=>{
+    axios.get('http://localhost:3000/products')
+    .then((data)=>{
+        
+        if(data.request.status===200){
+            const productwrap=document.querySelector('.wrap-products');
+            const productData=data.data.product;
+            
+            productData.forEach(productE=>{
+                console.log(productE);
+                const innerFormate=` <div id="${productE.id}" class="each-product">
+                                    <h3>${productE.title}</h3>
+                                    <div class="image"><img src="${productE.imageUrl}" alt="${productE.title}"></div>
+                                    <div>
+                                        <span class="span">
+                                            $
+                                            <span class="ammount">${productE.price}</span>
+                                        </span>
+                                        <button  id="product-${productE.id}" class="addCrt-btn">Add to cart</button>
+                                    </div>
+                                </div>`
+                productwrap.innerHTML+=innerFormate;
+            });
+            
+
+        }
+       
+   
+    })
+    .catch(err=>{console.log(err)});
+});
+
+// 
 // cart Button work
 // 
 const popCart=document.querySelectorAll('.popCartBtn');
@@ -51,7 +90,7 @@ mainDiv.addEventListener('click',(e)=>{
         send2Cart.innerHTML=productDetails;
         carter.appendChild(send2Cart);
 
-        totalAmmount.innerText=(parseFloat(totalAmmount.innerText)+parseFloat(productValue));   
+        totalAmmount.innerText=(parseFloat(totalAmmount.innerText)+parseFloat(productValue)).toFixed(2);   
         console.log(totalAmmount);
 
         cartNo.innerHTML=parseInt(cartNo.innerHTML)+1;
@@ -70,7 +109,7 @@ mainDiv.addEventListener('click',(e)=>{
         cartNo.innerHTML=parseInt(cartNo.innerHTML)-1;
         cartItem=e.target.parentNode.parentNode;
         cartPrice=cartItem.querySelector('.cart-price').innerText;
-        totalAmmount.innerText=parseFloat( totalAmmount.innerText) - parseFloat(cartPrice);
+        totalAmmount.innerText=((parseFloat( totalAmmount.innerText)).toFixed(2) - (parseFloat(cartPrice)).toFixed(2)).toFixed(2);
         cartItemId=cartItem.id;
         cartItem.remove();
    }
