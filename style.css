@@ -108,6 +108,7 @@ header h1{
 } 
 .image img{
     width: 90%;
+    height: 350px;
     transform-origin: center center;
     transition: transform .5s;
     

@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded',()=>{
             const productData=data.data.product;
             
             productData.forEach(productE=>{
-                console.log(productE);
+                // console.log(productE);
                 const innerFormate=` <div id="${productE.id}" class="each-product">
                                     <h3>${productE.title}</h3>
                                     <div class="image"><img src="${productE.imageUrl}" alt="${productE.title}"></div>
@@ -48,6 +48,29 @@ popCart.forEach(function(cartBtn){
     cartBtn.addEventListener('click',(e)=>{
         e.preventDefault();
         popUpCart.style.display='block';
+        axios.get('http://localhost:3000/cart')
+        .then(data=>{
+            if(data.request.status===200){
+                const products=data.data.product
+                products.forEach(product=>{
+                    const send2Cart=document.createElement('div');
+                    send2Cart.classList.add('cart-row');
+                    send2Cart.setAttribute('id',`in-cart-${product.id}`);
+                    const productDetails=` <span class=" cart-item cart-colomn"><img src="${product.imageUrl}"> ${product.title}</span>
+                    <span class=" cart-price cart-colomn">${product.price}</span>
+                    <span class=" cart-qunatity cart-colomn"><input type="text" value="1"> <button class="cartItm-removeBtn">Remove</button></span>`;
+                    send2Cart.innerHTML=productDetails;
+                    carter.appendChild(send2Cart);
+
+                    totalAmmount.innerText=(parseFloat(totalAmmount.innerText)+parseFloat(productValue)).toFixed(2);   
+                    // console.log(totalAmmount);
+                });
+
+                console.log(product[0])
+            }
+           
+        })
+        .catch(err=>console.log(err))
     });
 });
 
@@ -80,18 +103,16 @@ mainDiv.addEventListener('click',(e)=>{
             alert(`${productNme} is already added`);
             return;
         }
-            
-        const send2Cart=document.createElement('div');
-        send2Cart.classList.add('cart-row');
-        send2Cart.setAttribute('id',`in-cart-${prodId}`);
-        const productDetails=` <span class=" cart-item cart-colomn"><img src="${prodImage}"> ${productNme}</span>
-        <span class=" cart-price cart-colomn">${productValue}</span>
-        <span class=" cart-qunatity cart-colomn"><input type="text" value="1"> <button class="cartItm-removeBtn">Remove</button></span>`;
-        send2Cart.innerHTML=productDetails;
-        carter.appendChild(send2Cart);
 
-        totalAmmount.innerText=(parseFloat(totalAmmount.innerText)+parseFloat(productValue)).toFixed(2);   
-        console.log(totalAmmount);
+        axios.post(`http://localhost:3000/cart/${prodId}`)
+        .then(data=>{
+            // console.log(data);
+        })
+        .catch(err=>console.log(err));
+
+  
+            
+        
 
         cartNo.innerHTML=parseInt(cartNo.innerHTML)+1;
 
