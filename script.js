@@ -5,32 +5,24 @@
 
 // 
 window.addEventListener('DOMContentLoaded',()=>{
-    axios.get('http://localhost:2100/products')
-    .then((data)=>{        
+    // const objurl=new URLSearchParams(window.location.search);
+    // page = objurl.get('page') || 1;
+    const page= 1;
+    axios.get(`http://localhost:2100/products?page=${page}`)
+    .then((data)=>{   
+        console.log(data);     
         if(data.request.status===200){
-            const productwrap=document.querySelector('.wrap-products');
-            const productData=data.data.product;            
-            productData.forEach(productE=>{
-                // console.log(productE);
-                const innerFormate=` <div id="${productE.id}" class="each-product">
-                                    <h3>${productE.title}</h3>
-                                    <div class="image"><img src="${productE.imageUrl}" alt="${productE.title}"></div>
-                                    <div>
-                                        <span class="span">
-                                            $
-                                            <span class="ammount">${productE.price}</span>
-                                        </span>
-                                        <button onClick="addCart(${productE.id})" id="product-${productE.id}" class="addCrt-btn">Add to cart</button>
-                                    </div>
-                                </div>`
-                productwrap.innerHTML+=innerFormate;
-            });           
-
+            displayProducts(data.data.product);
+            showPagination(data.data);
         }      
    
     })
     .catch(err=>{console.log(err)});
 
+
+// 
+// All cart items fetching to cart list
+// 
     axios.get('http://localhost:2100/cart')
     .then((data)=>{
         if(data.request.status===200){
@@ -66,6 +58,76 @@ window.addEventListener('DOMContentLoaded',()=>{
     .catch(err=>console.log(err));
 });
 
+
+
+// 
+// Fetching products and display in frontend
+// 
+function displayProducts(productData){
+    const productwrap=document.querySelector('.wrap-products');                        
+            productData.forEach(productE=>{
+                // console.log(productE);
+                const innerFormate=` <div id="${productE.id}" class="each-product">
+                                    <h3>${productE.title}</h3>
+                                    <div class="image"><img src="${productE.imageUrl}" alt="${productE.title}"></div>
+                                    <div>
+                                        <span class="span">
+                                            $
+                                            <span class="ammount">${productE.price}</span>
+                                        </span>
+                                        <button onClick="addCart(${productE.id})" id="product-${productE.id}" class="addCrt-btn">Add to cart</button>
+                                    </div>
+                                </div>`
+                productwrap.innerHTML+=innerFormate;
+            });           
+
+}
+
+
+// 
+// Pagination function
+// 
+const pagination=document.querySelector('.pagination');
+function showPagination({
+    currentPage,
+    hasNextPage,
+    hasPreviousPage,
+    lastPage,
+    nextPage,
+    previousPage,
+}){
+    pagination.innerHTML='';
+    if(hasPreviousPage){
+        const btn2=document.createElement('button');
+        btn2.innerHTML=previousPage;
+        btn2.addEventListener('click',()=>getProducts(previousPage));
+        pagination.appendChild(btn2)
+    }
+    const btn1=document.createElement('button');
+    btn1.innerHTML=`<h3>${currentPage}</h3>`;
+    btn1.addEventListener('click',()=>getProducts(currentPage));
+    pagination.appendChild(btn1);
+    if(hasNextPage){
+        const btn3=document.createElement('button');
+        btn3.innerHTML=nextPage;
+        btn3.addEventListener('click',()=>getProducts(nextPage));
+        pagination.appendChild(btn3);
+    }
+}
+
+function getProducts(page){
+   
+    axios.get(`http://localhost:2100/products?page=${page}`)
+    .then((data)=>{   
+        console.log(data);     
+        if(data.request.status===200){
+            displayProducts(data.data.product);
+            showPagination(data.data);
+        }      
+   
+    })
+    .catch(err=>{console.log(err)});
+}
 
 
 // 
