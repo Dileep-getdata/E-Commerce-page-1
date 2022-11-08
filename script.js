@@ -5,7 +5,7 @@
 
 // 
 window.addEventListener('DOMContentLoaded',()=>{
-    axios.get('http://localhost:4500/products')
+    axios.get('http://localhost:2100/products')
     .then((data)=>{        
         if(data.request.status===200){
             const productwrap=document.querySelector('.wrap-products');
@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     })
     .catch(err=>{console.log(err)});
 
-    axios.get('http://localhost:4500/cart')
+    axios.get('http://localhost:2100/cart')
     .then((data)=>{
         if(data.request.status===200){
             const cartwrap=document.querySelector('.cart-items');
@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded',()=>{
                  
                 const productDetails=` <div class='cart-row' id="in-cart-${productE.id}"><span class=" cart-item cart-colomn"><img src="${productE.imageUrl}"> ${productE.title}</span>
                 <span class=" cart-price cart-colomn">${productE.price}</span>
-                <span class=" cart-qunatity cart-colomn"><input type="text" value="${productE.cartItem.quantity}"> <button class="cartItm-removeBtn">Remove</button></span></div>`;
+                <span class=" cart-qunatity cart-colomn"><input type="text" value="${productE.cartItem.quantity}"> <button  onClick="removeCartItem(${productE.id})" class="cartItm-removeBtn">Remove</button></span></div>`;
                 
                 cartwrap.innerHTML += productDetails;
                 quantityNo=quantityNo+productE.cartItem.quantity;
@@ -77,7 +77,7 @@ const closePop=document.querySelector('.close');
 
 
 function addCart(productId){
-    axios.post('http://localhost:4500/cart',{productId:productId})
+    axios.post('http://localhost:2100/cart',{productId:productId})
     .then(response=>{
         // console.log(response);
         if(response.status===200){
@@ -134,44 +134,22 @@ closePop.addEventListener('click',(e)=>{
 // 
 
 // console.log(carter);
-const mainDiv=document.getElementById('main-Container');
-mainDiv.addEventListener('click',(e)=>{
-   if(e.target.className=='addCrt-btn'){
-    // console.log(e.target.parentElement.parentElement);   
-    const cartNo=document.querySelector('.cart-no');
-    let totalAmmount=document.getElementById('total-value');
-    // console.log(totalAmmount);
-
-    
-        const productDetail=e.target.parentNode.parentNode;
-        const prodId=productDetail.id;
-        const productNme=productDetail.querySelector('h3').innerHTML;
-        const productValue=productDetail.querySelector('.ammount').innerHTML;
-        const prodImage=productDetail.querySelector('.image img').src;
-        if(document.querySelector(`#in-cart-${prodId}`)){
-            alert(`${productNme} is already added`);
-            return;
-        }           
-      
-        cartNo.innerHTML=parseInt(cartNo.innerHTML)+1;      
-
-   }
+// const mainDiv=document.getElementById('main-Container');
+// mainDiv.addEventListener('click',(e)=>{ 
 
 
-//    
-// cart item removed function
-// 
-   if(e.target.className=='cartItm-removeBtn'){
-    const cartNo=document.querySelector('.cart-no');
-    let totalAmmount=document.getElementById('total-value');
+// //    
+// // cart item removed function
+// // 
+//    if(e.target.className=='cartItm-removeBtn'){
+function removeCartItem(productId){
+    axios.post('http://localhost:2100/cart-delete-item',{productId:productId})
+    .then((response)=>{
+        // console.log(response);
+        notification(response.data.message);
+    })
+    .catch(err=>console.log(err))
+   
 
-        cartNo.innerHTML=parseInt(cartNo.innerHTML)-1;
-        cartItem=e.target.parentNode.parentNode;
-        cartPrice=cartItem.querySelector('.cart-price').innerText;
-        totalAmmount.innerText=((parseFloat( totalAmmount.innerText)).toFixed(2) - (parseFloat(cartPrice)).toFixed(2)).toFixed(2);
-        cartItemId=cartItem.id;
-        cartItem.remove();
-   }
-
-});
+};
 
