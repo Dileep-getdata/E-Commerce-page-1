@@ -83,12 +83,12 @@ function addCart(productId){
         if(response.status===200){
            notification(response.data.message);
         }else{
-            throw new Error();
+            throw new Error(response.data.message);
         }
         
     })
-    .catch(()=>{
-        notification(response.data.message);
+    .catch((errMsg)=>{
+        notification(errMsg);
     });
 };
 
@@ -146,9 +146,15 @@ function removeCartItem(productId){
     axios.post('http://localhost:2100/cart-delete-item',{productId:productId})
     .then((response)=>{
         // console.log(response);
+        if(response.status===200){
         notification(response.data.message);
+        }else{
+            throw new Error(response.data.message);
+        }
     })
-    .catch(err=>console.log(err))
+    .catch(errMsg=>{
+        notification(errMsg)
+    })
    
 
 };
