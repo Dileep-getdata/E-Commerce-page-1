@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     const page= 1;
     axios.get(`http://localhost:2100/products?page=${page}`)
     .then((data)=>{   
-        console.log(data);     
+        // console.log(data);     
         if(data.request.status===200){
             displayProducts(data.data.product);
             showPagination(data.data);
@@ -56,9 +56,32 @@ window.addEventListener('DOMContentLoaded',()=>{
         
     })
     .catch(err=>console.log(err));
+
+// 
+// Orders fetching
+// 
+axios.get('http://localhost:2100/orders')
+.then(response=>{
+    // console.log('orders'+order);
+    const orderWrap=document.querySelector('.wrap-orders');                        
+            response.forEach(orderE=>{
+                // console.log(productE);
+                const innerFormate=` <div id="${orderE.products.orderItem.id}" class="each-product">
+                                    <h3>${orderE.id}</h3>
+                                    <div class="image"><img src="${orderE.products.imageUrl}" alt="${orderE.products.title}"></div>
+                                    <div>
+                                        <span class="span">
+                                            $
+                                            <span class="ammount">${orderE.products.price}</span>
+                                        </span>
+                                        // <button onClick="addCart(${orderE.products.id})" id="product-${orderE.products.id}" class="addCrt-btn">Add to cart</button>
+                                    </div>
+                                </div>`
+                orderWrap.innerHTML+=innerFormate;
+            });  
+})
+.catch(err=>console.log(err));
 });
-
-
 
 // 
 // Fetching products and display in frontend
