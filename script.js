@@ -1,23 +1,35 @@
-// 
-// Domloaded
 
 
 
-// 
-window.addEventListener('DOMContentLoaded',()=>{
-    // const objurl=new URLSearchParams(window.location.search);
-    // page = objurl.get('page') || 1;
-    const page= 1;
-    axios.get(`http://localhost:2100/products?page=${page}`)
+function homeProducts(){
+    let idBtn='?page=0';
+    axios.get(`http://localhost:2100/products${idBtn}`)
     .then((data)=>{   
-        // console.log(data);     
-        if(data.request.status===200){
-            displayProducts(data.data.product);
-            showPagination(data.data);
-        }      
-   
+        console.log(data.data);     
+        displayProducts(data.data.result)        
     })
     .catch(err=>{console.log(err)});
+}
+homeProducts();
+//
+
+
+// <<<<<<<<<<<<<   Domloaded  >>>>>>>>>>>>>
+// 
+window.addEventListener('DOMContentLoaded',()=>{
+    // // const objurl=new URLSearchParams(window.location.search);
+    // // page = objurl.get('page') || 1;
+    // const page= 1;
+    // axios.get(`http://localhost:2100/products?page=${page}`)
+    // .then((data)=>{   
+    //     // console.log(data);     
+    //     if(data.request.status===200){
+    //         displayProducts(data.data.product);
+    //         // showPagination(data.data);
+    //     }      
+   
+    // })
+    // .catch(err=>{console.log(err)});
 
 
 // 
@@ -25,6 +37,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 // 
     axios.get('http://localhost:2100/cart')
     .then((data)=>{
+        // console.log(data);
         if(data.request.status===200){
             const cartwrap=document.querySelector('.cart-items');
             const cartNo=document.querySelector('.cart-no');
@@ -33,8 +46,7 @@ window.addEventListener('DOMContentLoaded',()=>{
             let totalPrice=0.00;
             let quantityNo=0;  
             // console.log(cartData);
-            cartData.forEach(productE=>{
-                 
+            cartData.forEach(productE=>{                 
                 const productDetails=` <div class='cart-row' id="in-cart-${productE.id}"><span class=" cart-item cart-colomn"><img src="${productE.imageUrl}"> ${productE.title}</span>
                 <span class=" cart-price cart-colomn">${productE.price}</span>
                 <span class=" cart-qunatity cart-colomn"><input type="text" value="${productE.cartItem.quantity}"> <button  onClick="removeCartItem(${productE.id})" class="cartItm-removeBtn">Remove</button></span></div>`;
@@ -43,54 +55,26 @@ window.addEventListener('DOMContentLoaded',()=>{
                 quantityNo=quantityNo+productE.cartItem.quantity;
                 
                 totalPrice = parseFloat(parseFloat(totalPrice)+productE.price*productE.cartItem.quantity).toFixed(2);
-                // console.log( typeof productE.price);
-        
+                // console.log( typeof productE.price);      
 
             })
-            totalAmmount.innerText=totalPrice;   
-       
-
-        cartNo.innerText=quantityNo;
-                
-        } 
-        
+            totalAmmount.innerText=totalPrice; 
+            cartNo.innerText=quantityNo;                
+        }         
     })
     .catch(err=>console.log(err));
-
-// 
-// Orders fetching
-// 
-axios.get('http://localhost:2100/orders')
-.then(response=>{
-    // console.log('orders'+order);
-    const orderWrap=document.querySelector('.wrap-orders');                        
-            response.forEach(orderE=>{
-                // console.log(productE);
-                const innerFormate=` <div id="${orderE.products.orderItem.id}" class="each-product">
-                                    <h3>${orderE.id}</h3>
-                                    <div class="image"><img src="${orderE.products.imageUrl}" alt="${orderE.products.title}"></div>
-                                    <div>
-                                        <span class="span">
-                                            $
-                                            <span class="ammount">${orderE.products.price}</span>
-                                        </span>
-                                        // <button onClick="addCart(${orderE.products.id})" id="product-${orderE.products.id}" class="addCrt-btn">Add to cart</button>
-                                    </div>
-                                </div>`
-                orderWrap.innerHTML+=innerFormate;
-            });  
-})
-.catch(err=>console.log(err));
 });
 
-// 
-// Fetching products and display in frontend
+
+
+// <<<<<<<<<<<<<<<<<      Fetching products and display in frontend     >>>>>>>>>>>>
 // 
 function displayProducts(productData){
-    const productwrap=document.querySelector('.wrap-products');                        
-            productData.forEach(productE=>{
-                // console.log(productE);
-                const innerFormate=` <div id="${productE.id}" class="each-product">
+    let productwrap=document.querySelector('.wrap-products'); 
+    let innerFormate=`<div></div>`;
+//     console.log(productData);                       
+            productData.forEach(productE=>{                
+                   innerFormate += ` <div id="${productE.id}" class="each-product">
                                     <h3>${productE.title}</h3>
                                     <div class="image"><img src="${productE.imageUrl}" alt="${productE.title}"></div>
                                     <div>
@@ -101,56 +85,96 @@ function displayProducts(productData){
                                         <button onClick="addCart(${productE.id})" id="product-${productE.id}" class="addCrt-btn">Add to cart</button>
                                     </div>
                                 </div>`
-                productwrap.innerHTML+=innerFormate;
+                               
+                                productwrap.innerHTML = innerFormate;
+                
             });           
 
 }
+// >>>>>>>>>>>>>>>>>>>>>>>>     End of display product      <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 // 
 // Pagination function
 // 
-const pagination=document.querySelector('.pagination');
-function showPagination({
-    currentPage,
-    hasNextPage,
-    hasPreviousPage,
-    lastPage,
-    nextPage,
-    previousPage,
-}){
-    pagination.innerHTML='';
-    if(hasPreviousPage){
-        const btn2=document.createElement('button');
-        btn2.innerHTML=previousPage;
-        btn2.addEventListener('click',()=>getProducts(previousPage));
-        pagination.appendChild(btn2)
-    }
-    const btn1=document.createElement('button');
-    btn1.innerHTML=`<h3>${currentPage}</h3>`;
-    btn1.addEventListener('click',()=>getProducts(currentPage));
-    pagination.appendChild(btn1);
-    if(hasNextPage){
-        const btn3=document.createElement('button');
-        btn3.innerHTML=nextPage;
-        btn3.addEventListener('click',()=>getProducts(nextPage));
-        pagination.appendChild(btn3);
-    }
-}
+const pag=document.querySelector('.pagination');
+function getButtons(){
+    axios.get('http://localhost:2100/getAllProduct')
+    .then(result=>{
+        let prodts_perpage = 2;
+        let c=0,cc=1;      
+        if(result.data.result.length%2==0){
+            let j = Math.trunc((result.data.result.length / prodts_perpage));            
 
-function getProducts(page){
-   
-    axios.get(`http://localhost:2100/products?page=${page}`)
+            for (let i = 0; i < j; i++) {
+                pag.innerHTML += `<button class="allbtns" id="?page=${c++}">${cc++}</button> `;
+            }
+        }else{
+            let j = Math.trunc((result.data.result.length / prodts_perpage)+1);                
+
+            for (let i = 0; i < j; i++) {
+                pag.innerHTML += `<button class="allbtns" id="?page=${c++}">${cc++}</button> `;
+            }
+        }
+    })
+    .catch(err=>console.log(err))
+}
+getButtons();
+
+
+pag.addEventListener('click',(e)=>{
+    let idBtn=e.target.id;
+    axios.get(`http://localhost:2100/products${idBtn}`)
     .then((data)=>{   
-        console.log(data);     
-        if(data.request.status===200){
-            displayProducts(data.data.product);
-            showPagination(data.data);
-        }      
+        console.log(data.data.result);     
+        displayProducts(data.data.result)      
    
     })
     .catch(err=>{console.log(err)});
-}
+});
+
+// const pagination=document.querySelector('.pagination');
+// function showPagination({
+//     currentPage,
+//     hasNextPage,
+//     hasPreviousPage,
+//     lastPage,
+//     nextPage,
+//     previousPage,
+// }){
+//     pagination.innerHTML='';
+//     if(hasPreviousPage){
+//         const btn2=document.createElement('button');
+//         btn2.innerHTML=previousPage;
+//         btn2.addEventListener('click',()=>getProducts(previousPage));
+//         pagination.appendChild(btn2)
+//     }
+//     const btn1=document.createElement('button');
+//     btn1.innerHTML=`<h3>${currentPage}</h3>`;
+//     btn1.addEventListener('click',()=>getProducts(currentPage));
+//     btn1.style.margin='10px';
+//     pagination.appendChild(btn1);
+//     if(hasNextPage){
+//         const btn3=document.createElement('button');
+//         btn3.innerHTML=nextPage;
+//         btn3.addEventListener('click',()=>getProducts(nextPage));
+//         pagination.appendChild(btn3);
+//     }
+// }
+
+// function getProducts(page){
+   
+//     axios.get(`http://localhost:2100/products?page=${page}`)
+//     .then((data)=>{   
+//         console.log(data);     
+//         if(data.request.status===200){
+//             displayProducts(data.data.product);
+//             // showPagination(data.data);
+//         }      
+   
+//     })
+//     .catch(err=>{console.log(err)});
+// }
 
 
 // 
@@ -239,8 +263,27 @@ function removeCartItem(productId){
     })
     .catch(errMsg=>{
         notification(errMsg)
-    })
-   
+    })   
 
 };
 
+
+// 
+// 
+// 
+const paymentBtn=document.querySelector('.payment-btn');
+paymentBtn.addEventListener('click',()=>{
+    axios.post('http://localhost:2100/create-order')
+    .then(data=>{
+        if(data.status===200){
+            notification("Succefully ordered")
+        }
+        else{
+            throw new Error(data.data.message)
+        }
+        // console.log(data);
+    })
+    .catch(err=>{
+        notification(err)
+    })
+})
